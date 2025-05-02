@@ -1,0 +1,19 @@
+---
+- name: Gather distribution facts
+  setup:
+    gather_subset:
+      - '!all'
+      - 'distribution'
+
+- include_tasks: iptables.yaml
+  when: ansible_os_family == "Debian" or (ansible_os_family == "RedHat" and (ansible_distribution_major_version | int < 8))
+  tags: ['fail2ban']
+
+- include_tasks: firewalld.yaml
+  when: 
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version | int >= 8
+  tags: ['fail2ban']
+
+- include_tasks: fail2ban.yaml
+  tags: ['fail2ban']

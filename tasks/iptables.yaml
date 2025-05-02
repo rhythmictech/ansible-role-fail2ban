@@ -1,0 +1,12 @@
+---
+- name: Ensure iptables is installed
+  ansible.builtin.apt:
+    name: iptables
+    state: present
+    update_cache: yes
+
+- name: Ensure iptables service is started and enabled on boot
+  ansible.builtin.service:
+    name: iptables
+    state: started
+    enabled: true

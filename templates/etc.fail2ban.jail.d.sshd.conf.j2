@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = {{ fail2ban_sshd_maxretry }}
+bantime = {{ fail2ban_sshd_bantime }}
+bantime.increment = {{ fail2ban_sshd_bantime_increment }}
+findtime = {{ fail2ban_sshd_findtime }}
+{% if fail2ban_sshd_whitelist is defined and fail2ban_sshd_whitelist %}
+ignoreip = {{ fail2ban_sshd_whitelist|join(' ') }}
+{% endif %}
+{% if ansible_os_family == "Debian"  %}
+action = {{ fail2ban_iptables_sshd_action }}
+{% elif ansible_os_family == "RedHat" %}
+action = {{ fail2ban_firewalld_sshd_action }}
+{% endif %}

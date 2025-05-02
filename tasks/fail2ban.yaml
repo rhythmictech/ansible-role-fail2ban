@@ -1,0 +1,22 @@
+- name: install fail2ban
+  ansible.builtin.package:
+    name: fail2ban
+    state: present
+  tags: ['fail2ban']
+
+- name: Configure fail2ban sshd jail
+  ansible.builtin.template:
+    src: "etc.fail2ban.jail.d.sshd.conf.j2"
+    dest: "/etc/fail2ban/jail.d/sshd.conf"
+    owner: root
+    group: root
+    mode: 0640
+  notify: restart fail2ban
+  tags: ['fail2ban']
+
+- name: Ensure fail2ban service is started and enabled on boot
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: true
+  tags: ['fail2ban']
