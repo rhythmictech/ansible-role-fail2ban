@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Mat Tiszenkel
+  description: Fail2Ban SSHD Configuration for Amazon Linux & Ubuntu Servers 
+  company: "Rhythmic Technologies, Inc."
+  license: "license (MIT)"
+  min_ansible_version: "2.4"
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags:
+    - fail2ban
+
+allow_duplicates: true
