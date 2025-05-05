@@ -3,9 +3,11 @@
   ansible.builtin.package:
     name: firewalld
     state: present
+  become: true
 
 - name: Ensure firewalld is started and enabled on boot
   ansible.builtin.service:
     name: firewalld
     state: started
     enabled: true
+  become: true

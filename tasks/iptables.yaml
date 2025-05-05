@@ -4,9 +4,11 @@
     name: iptables
     state: present
     update_cache: yes
+  become: true
 
 - name: Ensure iptables service is started and enabled on boot
   ansible.builtin.service:
     name: iptables
     state: started
     enabled: true
+  become: true

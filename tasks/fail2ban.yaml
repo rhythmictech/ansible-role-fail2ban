@@ -2,6 +2,7 @@
   ansible.builtin.package:
     name: fail2ban
     state: present
+  become: true
   tags: ['fail2ban']
 
 - name: Configure fail2ban sshd jail
@@ -11,6 +12,7 @@
     owner: root
     group: root
     mode: 0640
+  become: true
   notify: restart fail2ban
   tags: ['fail2ban']
 
@@ -19,4 +21,5 @@
     name: fail2ban
     state: started
     enabled: true
+  become: true
   tags: ['fail2ban']
