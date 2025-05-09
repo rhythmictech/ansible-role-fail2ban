@@ -3,7 +3,11 @@
 enabled = true
 port = ssh
 filter = sshd
+{% if ansible_os_family == "Debian" %}
 logpath = /var/log/auth.log
+{% else %}
+logpath = /var/log/secure
+{% endif %}
 maxretry = {{ fail2ban_sshd_maxretry }}
 bantime = {{ fail2ban_sshd_bantime }}
 bantime.increment = {{ fail2ban_sshd_bantime_increment }}
