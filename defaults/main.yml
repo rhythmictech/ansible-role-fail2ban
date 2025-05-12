@@ -2,7 +2,7 @@
 # fail2ban sshd config
 fail2ban_sshd_bantime: 1800
 fail2ban_sshd_findtime: 7200
-fail2ban_sshd_maxretry: 5
+fail2ban_sshd_maxretry: 3
 fail2ban_sshd_bantime_increment: 'true'
 fail2ban_sshd_whitelist: []
 fail2ban_iptables_sshd_action: iptables-allports[name=sshd, protocol=all]
