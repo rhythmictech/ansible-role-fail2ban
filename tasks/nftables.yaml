@@ -1,0 +1,10 @@
+---
+# fail2ban creates and manages its own nftables table, so only the nft binary
+# is needed. nftables.service is deliberately left disabled: starting or
+# restarting it loads /etc/sysconfig/nftables.conf and can flush fail2ban's
+# table.
+- name: Ensure nftables is installed
+  ansible.builtin.package:
+    name: nftables
+    state: present
+  become: true

@@ -3,11 +3,13 @@
 enabled = true
 port = ssh
 filter = sshd
-{% if ansible_os_family == "Debian" %}
+{% if ansible_facts['os_family'] == "Debian" %}
 logpath = /var/log/auth.log
-{% else %}
+{% elif fail2ban_firewall != "nftables" %}
 logpath = /var/log/secure
 {% endif %}
+{# On Amazon Linux 2023, fail2ban's paths-fedora.conf sets the systemd backend
+   for sshd, which reads the journal and ignores logpath. #}
 maxretry = {{ fail2ban_sshd_maxretry }}
 bantime = {{ fail2ban_sshd_bantime }}
 bantime.increment = {{ fail2ban_sshd_bantime_increment }}
@@ -15,8 +17,10 @@ findtime = {{ fail2ban_sshd_findtime }}
 {% if fail2ban_sshd_whitelist is defined and fail2ban_sshd_whitelist %}
 ignoreip = {{ fail2ban_sshd_whitelist|join(' ') }}
 {% endif %}
-{% if ansible_os_family == "Debian" or (ansible_os_family == "RedHat" and (ansible_distribution_major_version | int < 8)) %}
+{% if fail2ban_firewall == "iptables" %}
 action = {{ fail2ban_iptables_sshd_action }}
-{% elif ansible_os_family == "RedHat" %}
+{% elif fail2ban_firewall == "firewalld" %}
 action = {{ fail2ban_firewalld_sshd_action }}
+{% elif fail2ban_firewall == "nftables" %}
+action = {{ fail2ban_nftables_sshd_action }}
 {% endif %}

@@ -7,3 +7,6 @@ fail2ban_sshd_bantime_increment: 'true'
 fail2ban_sshd_whitelist: []
 fail2ban_iptables_sshd_action: iptables-allports[name=sshd, protocol=all]
 fail2ban_firewalld_sshd_action: firewallcmd-allports[name=sshd, protocol=all]
+# nft has no "all" protocol (the ban fails with "Could not resolve protocol
+# name"), so this uses the action's default, tcp.
+fail2ban_nftables_sshd_action: nftables-allports[name=sshd]
