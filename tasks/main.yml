@@ -1,19 +1,39 @@
 ---
 - name: Gather distribution facts
-  setup:
+  ansible.builtin.setup:
     gather_subset:
       - '!all'
       - 'distribution'
 
-- include_tasks: iptables.yaml
-  when: ansible_os_family == "Debian" or (ansible_os_family == "RedHat" and (ansible_distribution_major_version | int < 8))
+# Amazon Linux 2023 reports os_family RedHat and major version 2023, so it must
+# be matched before the EL >= 8 firewalld case. It uses nftables directly.
+- name: Select the firewall fail2ban bans with
+  ansible.builtin.set_fact:
+    fail2ban_firewall: >-
+      {%- if ansible_facts['distribution'] == 'Amazon' and ansible_facts['distribution_major_version'] | int >= 2023 -%}
+      nftables
+      {%- elif ansible_facts['os_family'] == 'Debian' or (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] | int < 8) -%}
+      iptables
+      {%- elif ansible_facts['os_family'] == 'RedHat' -%}
+      firewalld
+      {%- endif -%}
   tags: ['fail2ban']
 
-- include_tasks: firewalld.yaml
-  when: 
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version | int >= 8
+- name: Set up iptables
+  ansible.builtin.include_tasks: iptables.yaml
+  when: fail2ban_firewall == 'iptables'
   tags: ['fail2ban']
 
-- include_tasks: fail2ban.yaml
+- name: Set up firewalld
+  ansible.builtin.include_tasks: firewalld.yaml
+  when: fail2ban_firewall == 'firewalld'
+  tags: ['fail2ban']
+
+- name: Set up nftables
+  ansible.builtin.include_tasks: nftables.yaml
+  when: fail2ban_firewall == 'nftables'
+  tags: ['fail2ban']
+
+- name: Set up fail2ban
+  ansible.builtin.include_tasks: fail2ban.yaml
   tags: ['fail2ban']

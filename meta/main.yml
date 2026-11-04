@@ -1,5 +1,7 @@
 ---
 galaxy_info:
+  role_name: fail2ban
+  namespace: rhythmictech
   author: Mat Tiszenkel
   description: Fail2Ban SSHD Configuration for Amazon Linux & Ubuntu Servers 
   company: "Rhythmic Technologies, Inc."
@@ -7,6 +9,9 @@ galaxy_info:
   min_ansible_version: "2.4"
   platforms:
     - name: EL
+      versions:
+        - all
+    - name: Amazon
       versions:
         - all
     - name: Ubuntu
